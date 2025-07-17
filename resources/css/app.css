@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@import "tailwindcss";
+/**
+ * Daisy UI v5 Configuration
+ * Dual-theme setup for front-end and admin dashboard
+ */
+@plugin "daisyui" {
+    themes: cinephoria --default, admin-light;
+    logs: false;
+}
+
+/**
+ * Tailwind CSS v4 Source Configuration
+ * Scans Laravel views and JavaScript files for class detection
+ */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/**
+ * Global Theme Variables
+ * Shared design tokens across both themes
+ */
+@theme {
+    /* Typography - Differentiated by context */
+    --font-cinema: "Poppins", ui-sans-serif, system-ui, sans-serif; /* Expressive for cinema branding */
+    --font-admin: "Inter", ui-sans-serif, system-ui, sans-serif; /* Clean for data interfaces */
+
+    /* Cinema Theme Colors - Front-end branding */
+    --color-cinema-gold: #d4af37;
+    --color-cinema-dark: #1a1a1a;
+    --color-cinema-red: #ff6b6b;
+    --color-cinema-light: #ffffff;
+    --color-cinema-accent: #37cdbe; /* Cinema teal accent */
+
+    /* Admin Theme Colors - Professional dashboard */
+    --color-admin-primary: #6366f1; /* Professional indigo */
+    --color-admin-secondary: #64748b; /* Neutral slate */
+    --color-admin-dark: #1e293b; /* Dark text/elements */
+    --color-admin-light: #ffffff; /* Pure white backgrounds */
+    --color-admin-accent: #8b5cf6; /* Purple accent for highlights */
+    --color-admin-gray-50: #f8fafc; /* Lightest gray surfaces */
+    --color-admin-gray-100: #f1f5f9; /* Light gray containers */
+    --color-admin-gray-200: #e2e8f0; /* Border colors */
+    --color-admin-gray-300: #cbd5e1; /* Active borders */
+
+    /* Shared Grays - Common neutral tones */
+    --color-gray-50: #f8f9fa;
+    --color-gray-100: #e9ecef;
+
+    /* Semantic Colors - Shared across themes */
+    --color-info: #0ea5e9; /* Sky blue for information */
+    --color-success: #10b981; /* Emerald for success states */
+    --color-warning: #f59e0b; /* Amber for warnings */
+    --color-error: #ef4444; /* Red for error states */
+}
+
+/**
+ * Cinema Theme - Front-end Customer Experience
+ * Warm, inviting colors for movie theater branding
+ */
+@plugin "daisyui/theme" {
+    name: "cinephoria";
+    default: true;
+    color-scheme: light;
+    --font-sans: var(--font-cinema);
+    --color-primary: var(--color-cinema-gold);
+    --color-primary-content: var(--color-cinema-dark);
+    --color-secondary: var(--color-cinema-red);
+    --color-secondary-content: var(--color-cinema-light);
+    --color-accent: var(--color-cinema-accent);
+    --color-neutral: var(--color-cinema-dark);
+    --color-neutral-content: var(--color-cinema-light);
+    --color-base-100: var(--color-cinema-light);
+    --color-base-200: var(--color-gray-50);
+    --color-base-300: var(--color-gray-100);
+    --color-base-content: var(--color-cinema-dark);
+}
+
+/**
+ * Admin Light Theme - Dashboard Interface
+ * Clean, professional colors optimized for data visibility and extended use
+ */
+@plugin "daisyui/theme" {
+    name: "admin-light";
+    color-scheme: light;
+    --font-sans: var(--font-admin);
+    --color-primary: var(--color-admin-primary);
+    --color-primary-content: var(--color-admin-light);
+    --color-secondary: var(--color-admin-secondary);
+    --color-secondary-content: var(--color-admin-light);
+    --color-accent: var(--color-admin-accent);
+    --color-neutral: var(--color-admin-dark);
+    --color-neutral-content: var(--color-admin-light);
+    --color-base-100: var(--color-admin-light);
+    --color-base-200: var(--color-admin-gray-50);
+    --color-base-300: var(--color-admin-gray-100);
+    --color-base-content: var(--color-admin-dark);
+}
+
+/**
+ * Custom Component Overrides
+ * DaisyUI v5 component customizations
+ */
+@utility badge {
+    @apply px-3;
+}
+
+@utility badge-xs {
+    @apply px-2;
+}
