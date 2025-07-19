@@ -1,29 +1,71 @@
-FROM dunglas/frankenphp:php8.4
+FROM php:8.4-fpm
 
-# Install PHP extensions for Laravel + PostgreSQL
-RUN install-php-extensions pdo_pgsql redis
+# Install system deps
+RUN apt-get update && apt-get install -y \
+    nginx \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
+    autoconf \
+    g++ \
+    make \
+    zip \
+    unzip \
+    nodejs \
+    npm \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js for frontend assets
-RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
+# Install PHP extensions
+RUN docker-php-ext-install \
+    pdo \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip
+
+# Install MongoDB
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy the entire Laravel project to /app (as per official docs)
-COPY . /app
+# Configure Nginx & Supervisor
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Install Composer dependencies (regenerate lock file)
-WORKDIR /app
-RUN rm -f composer.lock && composer install --no-dev --optimize-autoloader
+WORKDIR /var/www/html
 
-# Install Node dependencies and build assets
-RUN npm ci --only=production && npm run build
+# Copy package.json and install Node deps FIRST
+COPY package*.json ./
+RUN npm ci
 
-# Laravel production optimizations
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+# Copy app source
+COPY . .
 
-# Set permissions
-RUN chown -R www-data:www-data /app
+# Install Composer deps
+RUN composer install --no-dev --optimize-autoloader
 
-# Set domain name for your server
-ENV SERVER_NAME=ecf-demo.kadvld.com
+# Build assets
+RUN npm run build
+
+# Clean up node_modules après le build
+RUN rm -rf node_modules
+
+# Permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
