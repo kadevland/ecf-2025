@@ -146,18 +146,9 @@
                         <div class="card-body">
                             <h3 class="card-title mb-4">Localisation</h3>
                             
-                            <!-- Map placeholder -->
-                            <div class="w-full h-64 bg-base-300 rounded-lg mb-4 relative overflow-hidden">
-                                <img src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{ $coordonneesGPS['longitude'] }},{{ $coordonneesGPS['latitude'] }},15,0/400x300?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" 
-                                     alt="Carte" 
-                                     class="w-full h-full object-cover">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg">
-                                        <svg class="w-6 h-6 text-primary-content" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                                        </svg>
-                                    </div>
-                                </div>
+                            <!-- OpenStreetMap -->
+                            <div class="w-full h-64 bg-base-300 rounded-lg mb-4 relative overflow-hidden" id="map-{{ $cinema->id }}">
+                                <!-- Map sera injecté ici par Leaflet -->
                             </div>
                             
                             <p class="text-sm mb-4">{{ $informationsPratiques['contact']['adresse'] }}</p>
@@ -237,4 +228,61 @@
             </div>
         </div>
     </div>
+    
+    @push('styles')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    @endpush
+    
+    @push('scripts')
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Coordonnées du cinéma
+            const latitude = {{ $coordonneesGPS['latitude'] }};
+            const longitude = {{ $coordonneesGPS['longitude'] }};
+            
+            // Initialiser la carte
+            const map = L.map('map-{{ $cinema->id }}').setView([latitude, longitude], 15);
+            
+            // Ajouter la couche OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // Créer une icône personnalisée pour le marqueur
+            const cinemaIcon = L.divIcon({
+                html: `<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                          <svg class="w-6 h-6 text-primary-content" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                          </svg>
+                      </div>`,
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupAnchor: [0, -48],
+                className: 'custom-div-icon'
+            });
+            
+            // Ajouter le marqueur
+            const marker = L.marker([latitude, longitude], { icon: cinemaIcon }).addTo(map);
+            
+            // Ajouter un popup avec le nom du cinéma
+            marker.bindPopup("<b>{{ $cinema->nom }}</b><br>{{ $informationsPratiques['contact']['adresse'] }}");
+            
+            // Style pour l'icône personnalisée
+            const style = document.createElement('style');
+            style.textContent = `
+                .custom-div-icon {
+                    background: transparent;
+                    border: none;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+    @endpush
 </x-app.layout>

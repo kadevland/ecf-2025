@@ -1,61 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎬 Cinéphoria
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Application de gestion de cinéma multi-plateforme** - Projet ECF 2025 (RNCP 37873)
 
-## About Laravel
+<div align="center">
+  <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
+  <img src="https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB-7.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+</div>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Description
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Cinéphoria est une application complète de gestion de cinéma pour une chaîne franco-belge de 7 établissements. Le projet suit une architecture Clean Architecture stricte avec Domain-Driven Design (DDD).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🎯 Fonctionnalités principales
 
-## Learning Laravel
+- **Gestion des films** : Catalogue complet avec notes et critiques
+- **Réservation en ligne** : Sélection de sièges interactifs
+- **Multi-cinémas** : 7 établissements en France et Belgique
+- **Billets QR Code** : Génération et validation automatique
+- **Système de notation** : Évaluation des films par les clients
+- **Analytics** : Tableaux de bord temps réel avec MongoDB
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🚀 Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Prérequis
 
-## Laravel Sponsors
+- Docker Desktop
+- Git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Installation avec Laravel Sail
 
-### Premium Partners
+```bash
+# Cloner le projet
+git clone https://github.com/yourusername/cinephoria.git
+cd cinephoria
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Installation initiale (utilise PHP du système temporairement)
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php84-composer:latest \
+    composer install --ignore-platform-reqs
 
-## Contributing
+# Configuration
+cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Démarrer Sail (PostgreSQL, MongoDB, Redis inclus)
+./vendor/bin/sail up -d
 
-## Code of Conduct
+# Générer la clé d'application
+./vendor/bin/sail artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Installer les dépendances Node
+./vendor/bin/sail npm install
 
-## Security Vulnerabilities
+# Bases de données
+./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan migrate:mongodb
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Compiler les assets
+./vendor/bin/sail npm run build
 
-## License
+# Pour le développement
+./vendor/bin/sail npm run dev
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📦 Technologies
+
+### Backend
+- **Laravel 12** - Framework PHP moderne
+- **PostgreSQL** - Base de données relationnelle principale
+
+
+### Frontend
+- **Tailwind CSS v4** + **DaisyUI** - Design system cinéma
+- **Alpine.js** - Interactivité sans SPA
+- **Leaflet** + **OpenStreetMap** - Cartes interactives
+
+### Packages clés
+- **MoneyPHP** - Gestion précise des prix
+- **cuyz/valinor** - DTOs type-safe
+- **sqids** - Génération d'identifiants courts et uniques pour les URLs publiques
+
+
+## 🧪 Tests
+
+```bash
+# Tous les tests
+composer test
+
+# Tests en parallèle
+php artisan test --parallel
+```
+
+## 🔒 Sécurité
+
+- **Authentification** : Multi-table avec types d'utilisateurs
+- **Rate limiting** : Protection brute force
+
+## 📄 Licence
+
+Projet éducatif dans le cadre de la certification RNCP 37873.
+
+---
+
+<div align="center">
+  <p>Développé avec ❤️ pour la certification Concepteur Développeur d'Applications</p>
+  <p><strong>ECF 2025</strong></p>
+</div>
