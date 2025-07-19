@@ -1,0 +1,29 @@
+FROM dunglas/frankenphp:php8.4
+
+# Install PHP extensions for Laravel + PostgreSQL
+RUN install-php-extensions pdo_pgsql redis
+
+# Install Node.js for frontend assets
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy the entire Laravel project to /app (as per official docs)
+COPY . /app
+
+# Install Composer dependencies (regenerate lock file)
+WORKDIR /app
+RUN rm -f composer.lock && composer install --no-dev --optimize-autoloader
+
+# Install Node dependencies and build assets
+RUN npm ci --only=production && npm run build
+
+# Laravel production optimizations
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+# Set permissions
+RUN chown -R www-data:www-data /app
+
+# Set domain name for your server
+ENV SERVER_NAME=ecf-demo.kadvld.com
