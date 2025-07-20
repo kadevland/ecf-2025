@@ -11,7 +11,8 @@ final readonly class AfficherSeancesUseCase
 {
     public function __construct(
         private SeanceRepositoryInterface $repository
-    ) {}
+    ) {
+    }
 
     public function execute(AfficherSeancesRequest $request): AfficherSeancesResponse
     {
@@ -29,9 +30,7 @@ final readonly class AfficherSeancesUseCase
             avecPlacesDisponibles: $request->avecPlacesDisponibles,
             placesMinimum: $request->placesMinimum,
             page: $request->page,
-            perPage: $request->perPage,
-            limit: $request->limit,
-            offset: $request->offset,
+            perPage: $request->perPage
         );
 
         // Execute Repository with pagination

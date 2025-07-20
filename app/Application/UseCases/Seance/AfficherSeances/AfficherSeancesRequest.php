@@ -28,7 +28,6 @@ final readonly class AfficherSeancesRequest
         public ?int $placesMinimum = null,
         public ?int $page = null,
         public ?int $perPage = null,
-        public ?int $limit = null,
-        public ?int $offset = null,
-    ) {}
+    ) {
+    }
 }

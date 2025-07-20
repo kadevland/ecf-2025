@@ -97,7 +97,7 @@
         </div>
 
         <!-- Gestion Billets -->
-        <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
+        {{-- <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
             <div class="card-body">
                 <h2 class="card-title text-accent">
                     🎟️ Billets
@@ -107,7 +107,7 @@
                     <a href="{{ route('gestion.supervision.billets.index') }}" class="btn btn-accent btn-sm">Voir billets</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Gestion Cinémas -->
         <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
