@@ -100,7 +100,7 @@ final class Menu extends Component
 
         return [
             [
-                'href'   => $this->urlLogout,
+                'href'   => route('deconnexion'),
                 'label'  => 'Déconnexion',
                 'icon'   => Blade::render('<x-lucide-log-out class="w-4 h-4 mr-2" />'),
                 'action' => 'logout',
