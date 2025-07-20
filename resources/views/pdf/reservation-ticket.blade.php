@@ -230,8 +230,8 @@
     </style>
 </head>
 <body>
-    @if($reservation->seance->film->affiche_url)
-        <div class="background-poster" style="background-image: url('{{ $reservation->seance->film->affiche_url }}');"></div>
+    @if($afficheDataUri)
+        <div class="background-poster" style="background-image: url('{{ $afficheDataUri }}');"></div>
     @endif
     <div class="background-overlay"></div>
     
@@ -246,9 +246,9 @@
         <div class="ticket-body">
             <!-- Film Section -->
             <div class="film-section">
-                @if($reservation->seance->film->affiche_url)
+                @if($afficheDataUri)
                     <img 
-                        src="{{ $reservation->seance->film->affiche_url }}" 
+                        src="{{ $afficheDataUri }}" 
                         alt="Affiche du film" 
                         class="film-poster-main"
                     >
