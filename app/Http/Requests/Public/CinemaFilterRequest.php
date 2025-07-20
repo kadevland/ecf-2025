@@ -25,7 +25,7 @@ final class CinemaFilterRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string', 'max:100'],
-            'pays'   => ['nullable', 'string', 'in:France,Belgique,tous'],
+            'pays'   => ['nullable', 'string', 'in:FR,BE'],
         ];
     }
 
